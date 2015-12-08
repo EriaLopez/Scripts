@@ -14,7 +14,7 @@ vidObj = VideoReader('C:\Users\Carmina\Documents\Master\ProcesamientoDeImagenes\
 currAxes = axes;
 
 % Num of max frames to obtain
-maxFrames = 100;
+maxFrames = 5;
 
 vidObj.FrameRate
 i = 1
@@ -57,14 +57,29 @@ for k=1:(maxFrames-1)
         end
     end
     imshow(red(:,:,k),[]);
-%     %Dilation
-%     figure(3);
-%     figure('Name','dilation');
-%     dilatedArray(:,:,k) = imdilate(red(:,:,k),structuringElement);
-%     for dilIndex=1:dilIterations
-%         dilatedArray(:,:,k) = imdilate(dilatedArray(:,:,k),structuringElement);
-%     end
-%     imshow(dilatedArray(:,:,k),[]);
+    %Filter image to remove everything but the circles
+    x1_filter = 10;
+    y1_filter = 719;
+    x2_filter = 180;
+    y2_filter = 895;
+    slopeFilter = (y2_filter-y1_filter)/(x2_filter-x1_filter);
+    x_filter = x1_filter:1:x2_filter;
+%     y_filter = slopeFilter * (x_filter-x1_filter) + y1_filter;
+    for indexRowFilter=1:size(red,1)
+        for indexColumnFilter=1:size(red,2)
+            y_filter = slopeFilter * (indexColumnFilter-x1_filter) + y1_filter;
+            if(indexRowFilter<y_filter)
+                imageFilter(indexRowFilter,indexColumnFilter) = 1;
+            else
+                imageFilter(indexRowFilter,indexColumnFilter) = 0;
+            end
+        end
+    end
+    figure('Name','filter');
+    imshow(imageFilter);
+    figure('Name','apply_filter');
+    red_filtered = and(imageFilter,red(:,:,1));
+    imshow(red_filtered);
 end
 
 %Dilation
