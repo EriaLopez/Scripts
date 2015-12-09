@@ -14,7 +14,7 @@ vidObj = VideoReader('C:\Users\Carmina\Documents\Master\ProcesamientoDeImagenes\
 currAxes = axes;
 
 % Num of max frames to obtain
-maxFrames = 5;
+maxFrames = 56;
 
 vidObj.FrameRate
 i = 1
@@ -57,29 +57,32 @@ for k=1:(maxFrames-1)
         end
     end
     imshow(red(:,:,k),[]);
-    %Filter image to remove everything but the circles
-    x1_filter = 10;
-    y1_filter = 719;
-    x2_filter = 180;
-    y2_filter = 895;
-    slopeFilter = (y2_filter-y1_filter)/(x2_filter-x1_filter);
-    x_filter = x1_filter:1:x2_filter;
-%     y_filter = slopeFilter * (x_filter-x1_filter) + y1_filter;
-    for indexRowFilter=1:size(red,1)
-        for indexColumnFilter=1:size(red,2)
-            y_filter = slopeFilter * (indexColumnFilter-x1_filter) + y1_filter;
-            if(indexRowFilter<y_filter)
-                imageFilter(indexRowFilter,indexColumnFilter) = 1;
-            else
-                imageFilter(indexRowFilter,indexColumnFilter) = 0;
-            end
+end
+
+%Filter image to remove everything but the circles
+x1_filter = 10;
+y1_filter = 719;
+x2_filter = 180;
+y2_filter = 895;
+slopeFilter = (y2_filter-y1_filter)/(x2_filter-x1_filter);
+x_filter = x1_filter:1:x2_filter;
+for indexRowFilter=1:size(red,1)   %create an image with a triangle
+    for indexColumnFilter=1:size(red,2)
+        y_filter = slopeFilter * (indexColumnFilter-x1_filter) + y1_filter;
+        if(indexRowFilter<y_filter)
+            imageFilter(indexRowFilter,indexColumnFilter) = 1;
+        else
+            imageFilter(indexRowFilter,indexColumnFilter) = 0;
         end
     end
-    figure('Name','filter');
-    imshow(imageFilter);
-    figure('Name','apply_filter');
-    red_filtered = and(imageFilter,red(:,:,1));
-    imshow(red_filtered);
+end
+figure('Name','filter');
+imshow(imageFilter);
+figure('Name','apply_filter');
+for n=1:(maxFrames-1)
+    red_filtered(:,:,n) = and(imageFilter,red(:,:,n));
+    imshow(red_filtered(:,:,n),[]);
+    pause(1/vidObj.FrameRate);
 end
 
 %Dilation
@@ -87,7 +90,7 @@ figure('Name','dilation');
 dilIterations = 7;
 structuringElement = [0 1 0; 1 1 1; 0 1 0];
 for m=1:(maxFrames-1)
-    dilatedArray(:,:,m) = imdilate(red(:,:,m),structuringElement);
+    dilatedArray(:,:,m) = imdilate(red_filtered(:,:,m),structuringElement);
     for dilIndex=1:dilIterations
         dilatedArray(:,:,m) = imdilate(dilatedArray(:,:,m),structuringElement);
     end
