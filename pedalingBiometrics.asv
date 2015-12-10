@@ -16,7 +16,7 @@ vidObj = VideoReader('C:\Users\Carmina\Documents\Master\ProcesamientoDeImagenes\
 currAxes = axes;
 
 % Num of max frames to obtain
-maxFrames = 65;
+maxFrames = 5;
 
 vidObj.FrameRate
 i = 1
@@ -90,7 +90,7 @@ end
 %Dilation
 figure('Name','dilation');
 dilIterations = 7;
-structuringElement = [0 1 1 0; 1 1 1 1; 0 1 1 0];
+structuringElement = [0 1 0; 1 1 1; 0 1 0];
 for m=1:(maxFrames-1)
     dilatedArray(:,:,m) = imdilate(red_filtered(:,:,m),structuringElement);
     for dilIndex=1:dilIterations
@@ -100,10 +100,9 @@ for m=1:(maxFrames-1)
     pause(1/vidObj.FrameRate);
 end
 
-figure('Name','centroids');
-
 for index=1:(maxFrames-1) 
-    %Find centroids    
+    %Find centroids
+    figure('Name','centroids');
     Ilabel = bwlabel(dilatedArray(:,:,index));
     centroids = regionprops(Ilabel, 'centroid');
     imshow(dilatedArray(:,:,index)); hold on;
@@ -112,16 +111,16 @@ for index=1:(maxFrames-1)
     end
     
     centroidsArranged(1) = centroids(1);
-    % limits for knee centroid = 96 < y < 430
-    if(centroids(2).Centroid(2)>96 & centroids(2).Centroid(2)<430) %y limits for knee centroid
+    % limits for knee centroid = 96 < y < 445
+    if(centroids(2).Centroid(2)>96 & centroids(2).Centroid(2)<445) %y limits for knee centroid
         centroidsArranged(4) = centroids(2);
         centroids(2).Centroid(1) = 0;
         centroids(2).Centroid(2) = 0;
-    elseif(centroids(3).Centroid(2)>96 & centroids(3).Centroid(2)<430)
+    elseif(centroids(3).Centroid(2)>96 & centroids(3).Centroid(2)<445)
         centroidsArranged(4) = centroids(3);
         centroids(3).Centroid(1) = 0;
         centroids(3).Centroid(2) = 0;
-    elseif(centroids(4).Centroid(2)>96 & centroids(4).Centroid(2)<430)
+    elseif(centroids(4).Centroid(2)>96 & centroids(4).Centroid(2)<445)
         centroidsArranged(4) = centroids(4);
         centroids(4).Centroid(1) = 0;
         centroids(4).Centroid(2) = 0;
@@ -130,28 +129,28 @@ for index=1:(maxFrames-1)
     % at this point, the first centroid is already used, and either one of
     % the rest 2, 3 or 4 is 0
     if(centroids(2).Centroid(1)==0)   %if centroid 2 was cleared, centroids 3 and 4 are left
-        if(centroids(3).Centroid(1)<centroids(4).Centroid(1)) %ancle is always behind the tip in x
-            centroidsArranged(2) = centroids(3);    %ancle
-            centroidsArranged(3) = centroids(4);    %tip
+        if(centroid(3).Centroid(1)<centroid(4).Centroid(1)) %ancle is always behind the tip in x
+            centroidsArranged(2) = centroid(3);    %ancle
+            centroidsArranged(3) = centroid(4);    %tip
         else
-            centroidsArranged(2) = centroids(4);
-            centroidsArranged(3) = centroids(3);
+            centroidsArranged(2) = centroid(4);
+            centroidsArranged(3) = centroid(3);
         end
     elseif(centroids(3).Centroid(1)==0)
-        if(centroids(2).Centroid(1)<centroids(4).Centroid(1))
-            centroidsArranged(2) = centroids(2);
-            centroidsArranged(3) = centroids(4);
+        if(centroid(2).Centroid(1)<centroid(4).Centroid(1))
+            centroidsArranged(2) = centroid(2);
+            centroidsArranged(3) = centroid(4);
         else
-            centroidsArranged(2) = centroids(4);
-            centroidsArranged(3) = centroids(2);
+            centroidsArranged(2) = centroid(4);
+            centroidsArranged(3) = centroid(2);
         end
     elseif(centroids(4).Centroid(1)==0)
-        if(centroids(2).Centroid(1)<centroids(3).Centroid(1))
-            centroidsArranged(2) = centroids(2);    %ancle
-            centroidsArranged(3) = centroids(3);    %tip
+        if(centroid(2).Centroid(1)<centroid(3).Centroid(1))
+            centroidsArranged(2) = centroid(2);    %ancle
+            centroidsArranged(3) = centroid(3);    %tip
         else
-            centroidsArranged(2) = centroids(3);
-            centroidsArranged(3) = centroids(2);
+            centroidsArranged(2) = centroid(3);
+            centroidsArranged(3) = centroid(2);
         end
     end
             
