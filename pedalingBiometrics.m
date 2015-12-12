@@ -16,7 +16,7 @@ vidObj = VideoReader('C:\Users\Carmina\Documents\Master\ProcesamientoDeImagenes\
 currAxes = axes;
 
 % Num of max frames to obtain
-maxFrames = 65;
+maxFrames = 23;
 
 vidObj.FrameRate
 i = 1
@@ -175,15 +175,24 @@ for index=1:(maxFrames-1)
 
     %Angles
     %Knee angle
-    v1 = y_hn(size(y_hn,2)-100 : size(y_hn,2));
-    v2 = y_ka(size(y_ka,2)-100 : size(y_ka,2));
-    cosThetaKnee = dot(v1,v2)/(norm(v1)*norm(v2))
+%     v1 = y_hn(size(y_hn,2)-100 : size(y_hn,2));
+    flip_x_hn = fliplr(x_hn);
+    flip_y_hn = fliplr(y_hn);
+    v1 = [flip_x_hn(size(flip_x_hn,2)),flip_y_hn(size(flip_y_hn,2))]
+%     v2 = y_ka(size(y_ka,2)-100 : size(y_ka,2));
+    flip_x_ka = fliplr(x_ka);
+    flip_y_ka = fliplr(y_ka);
+    v2 = [flip_x_ka(size(flip_x_ka,2)),flip_y_ka(size(flip_y_ka,2))]
+    x = [v1(1), v2(1)]
+    y = [v1(2), v2(2)]
+    scatter(x,y)
+    cosThetaKnee = dot(v1,v2)/(norm(v1)*norm(v2));
+   % cosThetaKnee = ((v1(1)*v2(1))+(v1(2)*v2(2)))/(norm(v1)*norm(v2))
     thetaKneeDegrees = acos(cosThetaKnee)*180/pi
     %Ancle angle
-    %v3 = y_at(size(y_at,2)-100 : size(y_at,2));
-    v3 = y_at(1 : 101);
-    cosThetaAncle = dot(v2,v3)/(norm(v2)*norm(v3))
-    thetaAncleDegrees = acos(cosThetaAncle)*180/pi
+%     v3 = y_at(1 : 101);
+%     cosThetaAncle = dot(v2,v3)/(norm(v2)*norm(v3))
+%     thetaAncleDegrees = acos(cosThetaAncle)*180/pi
 end
 
 
