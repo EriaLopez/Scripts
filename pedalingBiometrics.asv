@@ -180,14 +180,13 @@ for index=1:(maxFrames-1)
     
     %Angles
     %Knee angle
-%     flip_x_hn = fliplr(x_hn);
-%     flip_y_hn = fliplr(y_hn);
-%     v1 = [flip_x_hn(size(flip_x_hn,2)),flip_y_hn(size(flip_y_hn,2))]
-    v1= [(centroidsArranged(1).Centroid(1)-centroidsArranged(4).Centroid(1)),(centroidsArranged(1).Centroid(2)-centroidsArranged(4).Centroid(2))]
-%     flip_x_ka = fliplr(x_ka);
-%     flip_y_ka = fliplr(y_ka);
-%     v2 = [flip_x_ka(size(flip_x_ka,2)),flip_y_ka(size(flip_y_ka,2))]
-    v2 = [(centroidsArranged(2).Centroid(1)-centroidsArranged(4).Centroid(1)),(centroidsArranged(2).Centroid(2)-centroidsArranged(4).Centroid(2))]
+    flip_x_hn = fliplr(x_hn);
+    flip_y_hn = fliplr(y_hn);
+    v1 = [flip_x_hn(size(flip_x_hn,2)),flip_y_hn(size(flip_y_hn,2))]
+    v1= [centroidsArranged(1).Centroid(1)-centroidsArranged(4).Cen]
+    flip_x_ka = fliplr(x_ka);
+    flip_y_ka = fliplr(y_ka);
+    v2 = [flip_x_ka(size(flip_x_ka,2)),flip_y_ka(size(flip_y_ka,2))]
     x = [v1(1), v2(1)]
     y = [v1(2), v2(2)]
     scatter(x,y)
