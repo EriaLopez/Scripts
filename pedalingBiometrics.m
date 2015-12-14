@@ -16,7 +16,7 @@ vidObj = VideoReader('C:\Users\Carmina\Documents\Master\ProcesamientoDeImagenes\
 currAxes = axes;
 
 % Num of max frames to obtain
-maxFrames = 23;
+maxFrames = 59;
 
 vidObj.FrameRate
 i = 1
@@ -180,23 +180,24 @@ for index=1:(maxFrames-1)
     
     %Angles
     %Knee angle
-%     flip_x_hn = fliplr(x_hn);
-%     flip_y_hn = fliplr(y_hn);
-%     v1 = [flip_x_hn(size(flip_x_hn,2)),flip_y_hn(size(flip_y_hn,2))]
     v1= [(centroidsArranged(1).Centroid(1)-centroidsArranged(4).Centroid(1)),(centroidsArranged(1).Centroid(2)-centroidsArranged(4).Centroid(2))]
-%     flip_x_ka = fliplr(x_ka);
-%     flip_y_ka = fliplr(y_ka);
-%     v2 = [flip_x_ka(size(flip_x_ka,2)),flip_y_ka(size(flip_y_ka,2))]
     v2 = [(centroidsArranged(2).Centroid(1)-centroidsArranged(4).Centroid(1)),(centroidsArranged(2).Centroid(2)-centroidsArranged(4).Centroid(2))]
     x = [v1(1), v2(1)]
     y = [v1(2), v2(2)]
     scatter(x,y)
     cosThetaKnee = dot(v1,v2)/(norm(v1)*norm(v2));
     thetaKneeDegrees = acos(cosThetaKnee)*180/pi
+    name1 = cellstr(num2str(thetaKneeDegrees))
+    text(centroidsArranged(4).Centroid(1)+50,centroidsArranged(4).Centroid(2)+50,name1,'FontSize',14,'Color',[1,.1,.5],'FontWeight','Bold');
     %Ancle angle
-%     v3 = y_at(1 : 101);
-%     cosThetaAncle = dot(v2,v3)/(norm(v2)*norm(v3))
-%     thetaAncleDegrees = acos(cosThetaAncle)*180/pi
+    %v2 coordinate for ancle angle is not the same as for knee angle
+    v2_ = [(centroidsArranged(4).Centroid(1)-centroidsArranged(2).Centroid(1)),(centroidsArranged(4).Centroid(2)-centroidsArranged(2).Centroid(2))];   
+    v3= [(centroidsArranged(3).Centroid(1)-centroidsArranged(2).Centroid(1)),(centroidsArranged(3).Centroid(2)-centroidsArranged(2).Centroid(2))];    
+    cosThetaAncle = dot(v2_,v3)/(norm(v2_)*norm(v3))
+    thetaAncleDegrees = acos(cosThetaAncle)*180/pi
+    name2 = cellstr(num2str(thetaAncleDegrees))
+    text(centroidsArranged(2).Centroid(1)+50,centroidsArranged(2).Centroid(2)+50,name2,'FontSize',14,'Color',[1,.1,.5],'FontWeight','Bold');
+    pause(1);
 end
 
 
